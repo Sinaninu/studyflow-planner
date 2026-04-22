@@ -1,0 +1,24 @@
+{
+  "name": "studyflow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+  "dev": "concurrently \"npm run dev --prefix backend\" \"npm run dev --prefix frontend\""
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Sinaninu/studyflow-planner.git"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "type": "commonjs",
+  "bugs": {
+    "url": "https://github.com/Sinaninu/studyflow-planner/issues"
+  },
+  "homepage": "https://github.com/Sinaninu/studyflow-planner#readme",
+  "devDependencies": {
+    "concurrently": "^9.2.1"
+  }
+}
