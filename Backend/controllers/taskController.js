@@ -54,7 +54,7 @@ export const createTask = async (req, res) => {
       !description ||
       !deadline ||
       !priority ||
-      !estimatedHours ||
+      estimatedHours === undefined ||
       !courseId ||
       !userId
     ) {
@@ -121,7 +121,7 @@ export const updateTask = async (req, res) => {
       !deadline ||
       !priority ||
       !status ||
-      !estimatedHours ||
+      estimatedHours === undefined ||
       !courseId ||
       !userId
     ) {
