@@ -5,11 +5,13 @@ const courseSchema = new mongoose.Schema(
     title: {
       type: String,
       required: [true, "Course title is required"],
+      minlength: [3, "Course title must be at least 3 characters"],
       trim: true,
     },
     code: {
       type: String,
       required: [true, "Course code is required"],
+      minlength: [3, "Course code must be at least 3 characters"],
       trim: true,
       uppercase: true,
     },
