@@ -1,6 +1,9 @@
 import express from "express";
 import {
   getTasks,
+  getTasksByCourse,
+  getTasksByUser,
+  getTaskDetails,
   getTaskById,
   createTask,
   updateTask,
@@ -10,6 +13,9 @@ import {
 const router = express.Router();
 
 router.get("/", getTasks);
+router.get("/course/:courseId", getTasksByCourse);
+router.get("/user/:userId", getTasksByUser);
+router.get("/:id/details", getTaskDetails);
 router.get("/:id", getTaskById);
 router.post("/", createTask);
 router.put("/:id", updateTask);

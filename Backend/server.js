@@ -3,6 +3,8 @@ import cors from "cors";
 import dotenv from "dotenv";
 import connectDB from "./config/db.js";
 import taskRoutes from "./routes/taskRoutes.js";
+import userRoutes from "./routes/userRoutes.js";
+import courseRoutes from "./routes/courseRoutes.js";
 
 dotenv.config();
 connectDB();
@@ -18,6 +20,8 @@ app.get('/', (req,res)=>{
 });
 
 app.use("/api/tasks", taskRoutes);
+app.use("/api/users", userRoutes);
+app.use("/api/courses", courseRoutes);
 
 app.listen(PORT, ()=>{
     console.log(`Server is running on port ${PORT}`);

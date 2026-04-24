@@ -1,0 +1,19 @@
+[33m93ee88e[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m)[m feat: add user and course read endpoints
+[33mf4f70e7[m feat: add task filtering with query parameters and add relational task endpoints for course and user
+[33m0e71d1f[m fix: correct estimated hours validation in task controller
+[33mc6f5978[m feature: add task routes
+[33m601272e[m feature: add task controller
+[33mbba25fc[m chore: fixed some code lines in model to have the same coding flow
+[33m4386f34[m feat: add realistic seed data for users courses studysessions and tasks
+[33m9df7499[m feature: Add StudySession model with validation and relationships
+[33m7543199[m[33m ([m[1;31morigin/main[m[33m)[m Add Task model with validation and references to user and course
+[33mda9c16f[m feature: Add Course model with validation and unique course code
+[33m96153f1[m feature: Add User model with validation and timestamps
+[33m4ad796a[m chore: standardize project folder names and gitignore files
+[33mf385d2c[m chore: add root dev script using concurrently
+[33m68133fb[m fix:correct db import path in server file and fix mondodb connection by updating credential
+[33mb7501b7[m feature: connect backend to mongodb atlas with mangoose
+[33m0d12e40[m feature: add express server with cors and json middleware
+[33m2bcfbf6[m chore: add root gitignore
+[33m8784d62[m chore: add backend folder structure and backend gitignore
+[33md674aae[m Initialize React frontend with Vite
