@@ -94,7 +94,15 @@ function TaskList({ refreshKey }) {
   };
 
   useEffect(() => {
+  fetchTasks();
+
+  const intervalId = setInterval(() => {
     fetchTasks();
+  }, 10000);
+
+  return () => {
+    clearInterval(intervalId);
+  };
   }, [refreshKey]);
 
   if (loading) return <p>Loading tasks...</p>;
