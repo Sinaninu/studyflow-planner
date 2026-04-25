@@ -1,6 +1,6 @@
 import { useEffect, useState } from "react";
 
-function TaskList() {
+function TaskList({refreshKey}) {
   const [tasks, setTasks] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState("");
@@ -26,7 +26,7 @@ function TaskList() {
 
   useEffect(() => {
     fetchTasks();
-  }, []);
+  }, [refreshKey]);
 
   if (loading) {
     return <p>Loading tasks...</p>;
