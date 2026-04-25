@@ -1,6 +1,7 @@
 import { useState } from "react";
 import TaskList from "./components/TaskList";
 import TaskForm from "./components/TaskForm";
+import TaskStats from "./components/TaskStats";
 
 function App() {
   const [refreshKey, setRefreshKey] = useState(0);
@@ -16,6 +17,7 @@ function App() {
 
       <TaskForm onTaskCreated={refreshTasks} />
       <TaskList refreshKey={refreshKey} />
+      <TaskStats />
     </main>
   );
 }
