@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 function TaskForm({ onTaskCreated }) {
   const [formData, setFormData] = useState({
@@ -12,7 +12,29 @@ function TaskForm({ onTaskCreated }) {
     userId: "",
   });
 
+  const [courses, setCourses] = useState([]);
+  const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
+
+  // FETCH COURSES + USERS
+  useEffect(() => {
+    const fetchData = async () => {
+      try {
+        const courseRes = await fetch("http://localhost:5000/api/courses");
+        const userRes = await fetch("http://localhost:5000/api/users");
+
+        const courseData = await courseRes.json();
+        const userData = await userRes.json();
+
+        setCourses(courseData);
+        setUsers(userData);
+      } catch (err) {
+        setError("Failed to load courses or users");
+      }
+    };
+
+    fetchData();
+  }, []);
 
   const handleChange = (e) => {
     setFormData({
@@ -103,25 +125,32 @@ function TaskForm({ onTaskCreated }) {
         <input
           name="estimatedHours"
           type="number"
-          step="0.25"
+          step="0.5"
+          min="0"
           placeholder="Estimated hours"
           value={formData.estimatedHours}
           onChange={handleChange}
         />
 
-        <input
-          name="courseId"
-          placeholder="Course ID"
-          value={formData.courseId}
-          onChange={handleChange}
-        />
+        {/* USER DROPDOWN */}
+        <select name="userId" value={formData.userId} onChange={handleChange}>
+          <option value="">Select User</option>
+          {users.map((user) => (
+            <option key={user._id} value={user._id}>
+              {user.name}
+            </option>
+          ))}
+        </select>
 
-        <input
-          name="userId"
-          placeholder="User ID"
-          value={formData.userId}
-          onChange={handleChange}
-        />
+        {/* COURSE DROPDOWN */}
+        <select name="courseId" value={formData.courseId} onChange={handleChange}>
+          <option value="">Select Course</option>
+          {courses.map((course) => (
+            <option key={course._id} value={course._id}>
+              {course.title}
+            </option>
+          ))}
+        </select>
 
         <button type="submit">Add Task</button>
       </form>
