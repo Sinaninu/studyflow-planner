@@ -107,7 +107,6 @@ export const getTaskDetails = async (req, res) => {
   }
 };
 
-
 // GET ONE TASK (/api/tasks/:id)
 export const getTaskById = async (req, res) => {
   try {
@@ -288,5 +287,35 @@ export const deleteTask = async (req, res) => {
     res.status(200).json({ message: "Task deleted successfully" });
   } catch (error) {
     res.status(500).json({ message: "Failed to delete task" });
+  }
+};
+
+// GET /api/tasks/stats/summary
+export const getTaskStats = async (req, res) => {
+  try {
+    const totalTasks = await Task.countDocuments();
+
+    const completedTasks = await Task.countDocuments({ status: "completed" });
+    const pendingTasks = await Task.countDocuments({ status: "pending" });
+    const inProgressTasks = await Task.countDocuments({
+      status: "in-progress",
+    });
+
+    const tasks = await Task.find();
+
+    const totalEstimatedHours = tasks.reduce(
+      (sum, task) => sum + task.estimatedHours,
+      0
+    );
+
+    res.status(200).json({
+      totalTasks,
+      completedTasks,
+      pendingTasks,
+      inProgressTasks,
+      totalEstimatedHours,
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch task statistics" });
   }
 };

@@ -4,6 +4,7 @@ import {
   getTasksByCourse,
   getTasksByUser,
   getTaskDetails,
+  getTaskStats,
   getTaskById,
   createTask,
   updateTask,
@@ -16,6 +17,7 @@ router.get("/", getTasks);
 router.get("/course/:courseId", getTasksByCourse);
 router.get("/user/:userId", getTasksByUser);
 router.get("/:id/details", getTaskDetails);
+router.get("/stats/summary", getTaskStats);
 router.get("/:id", getTaskById);
 router.post("/", createTask);
 router.put("/:id", updateTask);
