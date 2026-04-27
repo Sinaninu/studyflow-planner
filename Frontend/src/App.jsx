@@ -17,7 +17,7 @@ function App() {
 
       <TaskForm onTaskCreated={refreshTasks} />
       <TaskList refreshKey={refreshKey} />
-      <TaskStats />
+      <TaskStats refreshKey={refreshKey} />
     </main>
   );
 }

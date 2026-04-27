@@ -297,9 +297,7 @@ export const getTaskStats = async (req, res) => {
 
     const completedTasks = await Task.countDocuments({ status: "completed" });
     const pendingTasks = await Task.countDocuments({ status: "pending" });
-    const inProgressTasks = await Task.countDocuments({
-      status: "in-progress",
-    });
+    const inProgressTasks = await Task.countDocuments({status: "in-progress"});
 
     const tasks = await Task.find();
 

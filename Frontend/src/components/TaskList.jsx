@@ -9,6 +9,18 @@ function TaskList({ refreshKey }) {
   const [editData, setEditData] = useState({});
   const [search, setSearch] = useState("");
 
+  const formatHours = (hours) => {
+    if (!hours && hours !== 0) return "";
+
+    const h = Math.floor(hours);
+    const m = Math.round((hours - h) * 60);
+
+    if (m === 0) return `${h}h`;
+    if (h === 0) return `${m}m`;
+
+    return `${h}h ${m}m`;
+  };
+
   const fetchTasks = async () => {
     try {
       setLoading(true);
@@ -30,18 +42,13 @@ function TaskList({ refreshKey }) {
   };
 
   const handleDelete = async (taskId) => {
-    const confirmDelete = window.confirm(
-      "Are you sure you want to delete this task?"
-    );
-
-    if (!confirmDelete) {
-      return;
-    }
+    if (!window.confirm("Are you sure you want to delete this task?")) return;
 
     try {
-      const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
-        method: "DELETE",
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/tasks/${taskId}`,
+        { method: "DELETE" }
+      );
 
       const data = await response.json();
 
@@ -56,6 +63,9 @@ function TaskList({ refreshKey }) {
   };
 
   const startEdit = (task) => {
+    const hours = Math.floor(task.estimatedHours);
+    const minutes = Math.round((task.estimatedHours - hours) * 60);
+
     setEditingTaskId(task._id);
 
     setEditData({
@@ -64,7 +74,8 @@ function TaskList({ refreshKey }) {
       deadline: task.deadline.split("T")[0],
       priority: task.priority,
       status: task.status,
-      estimatedHours: task.estimatedHours,
+      hours: hours,
+      minutes: minutes,
       courseId: task.courseId,
       userId: task.userId,
     });
@@ -79,16 +90,27 @@ function TaskList({ refreshKey }) {
 
   const handleUpdate = async (taskId) => {
     try {
-      const response = await fetch(`http://localhost:5000/api/tasks/${taskId}`, {
-        method: "PUT",
-        headers: {
-          "Content-Type": "application/json",
-        },
-        body: JSON.stringify({
-          ...editData,
-          estimatedHours: Number(editData.estimatedHours),
-        }),
-      });
+      const response = await fetch(
+        `http://localhost:5000/api/tasks/${taskId}`,
+        {
+          method: "PUT",
+          headers: {
+            "Content-Type": "application/json",
+          },
+          body: JSON.stringify({
+            title: editData.title,
+            description: editData.description,
+            deadline: editData.deadline,
+            priority: editData.priority,
+            status: editData.status,
+            estimatedHours:
+              Number(editData.hours ?? 0) +
+              Number(editData.minutes ?? 0) / 60,
+            courseId: editData.courseId,
+            userId: editData.userId,
+          }),
+        }
+      );
 
       const data = await response.json();
 
@@ -106,26 +128,17 @@ function TaskList({ refreshKey }) {
   useEffect(() => {
     fetchTasks();
 
-    const intervalId = setInterval(() => {
-      fetchTasks();
-    }, 10000);
+    const intervalId = setInterval(fetchTasks, 10000);
 
-    return () => {
-      clearInterval(intervalId);
-    };
+    return () => clearInterval(intervalId);
   }, [refreshKey]);
 
   const filteredTasks = tasks.filter((task) =>
     task.title.toLowerCase().includes(search.toLowerCase())
   );
 
-  if (loading) {
-    return <p>Loading tasks...</p>;
-  }
-
-  if (error) {
-    return <p>{error}</p>;
-  }
+  if (loading) return <p>Loading tasks...</p>;
+  if (error) return <p>{error}</p>;
 
   return (
     <section>
@@ -185,23 +198,61 @@ function TaskList({ refreshKey }) {
                     <option value="completed">Completed</option>
                   </select>
 
-                  <input
-                    name="estimatedHours"
-                    type="number"
-                    step="0.25"
-                    value={editData.estimatedHours}
-                    onChange={handleEditChange}
-                  />
+                  {/* ✅ FIXED TIME INPUT */}
+                  <div className="time-input">
+                    <input
+                      type="number"
+                      placeholder="Hours"
+                      min="0"
+                      value={editData.hours ?? ""}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          hours: e.target.value,
+                        })
+                      }
+                    />
 
-                  <button onClick={() => handleUpdate(task._id)}>Save</button>
-                  <button onClick={() => setEditingTaskId(null)}>Cancel</button>
+                    <select
+                      value={editData.minutes ?? ""}
+                      onChange={(e) =>
+                        setEditData({
+                          ...editData,
+                          minutes: e.target.value,
+                        })
+                      }
+                    >
+                      <option value="">Minutes</option>
+                      <option value="0">00 min</option>
+                      <option value="10">10 min</option>
+                      <option value="15">15 min</option>
+                      <option value="20">20 min</option>
+                      <option value="25">25 min</option>
+                      <option value="30">30 min</option>
+                      <option value="35">35 min</option>
+                      <option value="40">40 min</option>
+                      <option value="45">45 min</option>
+                      <option value="50">50 min</option>
+                      <option value="55">55 min</option>
+                    </select>
+                  </div>
+
+                  <button onClick={() => handleUpdate(task._id)}>
+                    Save
+                  </button>
+                  <button onClick={() => setEditingTaskId(null)}>
+                    Cancel
+                  </button>
                 </>
               ) : (
                 <>
-                  <strong>{task.title}</strong> — {task.priority} —{" "}
-                  {task.status} — {task.estimatedHours}h
+                  <strong>{task.title}</strong> | {task.priority} |{" "}
+                  {task.status} | {task.deadline?.split("T")[0]} |{" "}
+                  {formatHours(task.estimatedHours)}
                   <button onClick={() => startEdit(task)}>Edit</button>
-                  <button onClick={() => handleDelete(task._id)}>Delete</button>
+                  <button onClick={() => handleDelete(task._id)}>
+                    Delete
+                  </button>
                 </>
               )}
             </li>

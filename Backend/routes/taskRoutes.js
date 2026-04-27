@@ -1,10 +1,10 @@
 import express from "express";
 import {
   getTasks,
+  getTaskStats,
   getTasksByCourse,
   getTasksByUser,
   getTaskDetails,
-  getTaskStats,
   getTaskById,
   createTask,
   updateTask,

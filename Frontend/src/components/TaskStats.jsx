@@ -1,7 +1,20 @@
 import { useEffect, useState } from "react";
 
-function TaskStats() {
+function TaskStats({ refreshKey }) {
   const [stats, setStats] = useState(null);
+
+  // Format hours into "Xh Ym"
+  const formatHours = (hours) => {
+    if (!hours) return "0h";
+
+    const h = Math.floor(hours);
+    const m = Math.round((hours - h) * 60);
+
+    if (m === 0) return `${h}h`;
+    if (h === 0) return `${m}m`;
+
+    return `${h}h ${m}m`;
+  };
 
   useEffect(() => {
     const fetchStats = async () => {
@@ -17,7 +30,7 @@ function TaskStats() {
     };
 
     fetchStats();
-  }, []);
+  }, [refreshKey]);
 
   if (!stats) return <p>Loading stats...</p>;
 
@@ -28,7 +41,12 @@ function TaskStats() {
       <p>Completed: {stats.completedTasks}</p>
       <p>Pending: {stats.pendingTasks}</p>
       <p>In Progress: {stats.inProgressTasks}</p>
-      <p>Total Estimated Hours: {stats.totalEstimatedHours}</p>
+
+      {/*FIXED DISPLAY */}
+      <p>
+        Total Estimated Time:{" "}
+        <strong>{formatHours(stats.totalEstimatedHours)}</strong>
+      </p>
     </section>
   );
 }
