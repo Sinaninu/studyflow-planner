@@ -4,7 +4,6 @@ import connectDB from "../config/db.js";
 import User from "../models/User.js";
 import Course from "../models/Course.js";
 import Task from "../models/Task.js";
-import StudySession from "../models/StudySession.js";
 
 dotenv.config();
 
@@ -15,7 +14,6 @@ const seedData = async () => {
     await User.deleteMany();
     await Course.deleteMany();
     await Task.deleteMany();
-    await StudySession.deleteMany();
 
     const users = await User.insertMany([
       {
@@ -131,49 +129,6 @@ const seedData = async () => {
         priority: "low",
         status: "completed",
         estimatedHours: 1,
-        courseId: courses[4]._id,
-        userId: users[2]._id,
-      },
-    ]);
-
-    await StudySession.insertMany([
-      {
-        date: new Date("2026-04-22T10:00:00"),
-        durationMinutes: 90,
-        topic: "QuickSort analysis",
-        location: "Library",
-        courseId: courses[0]._id,
-        userId: users[0]._id,
-      },
-      {
-        date: new Date("2026-04-22T14:00:00"),
-        durationMinutes: 60,
-        topic: "CPU scheduling revision",
-        location: "Home desk",
-        courseId: courses[1]._id,
-        userId: users[0]._id,
-      },
-      {
-        date: new Date("2026-04-23T09:00:00"),
-        durationMinutes: 120,
-        topic: "Backend route development",
-        location: "Campus study room",
-        courseId: courses[2]._id,
-        userId: users[0]._id,
-      },
-      {
-        date: new Date("2026-04-23T16:30:00"),
-        durationMinutes: 45,
-        topic: "ERD planning",
-        location: "Library",
-        courseId: courses[3]._id,
-        userId: users[1]._id,
-      },
-      {
-        date: new Date("2026-04-24T11:00:00"),
-        durationMinutes: 75,
-        topic: "Interface review",
-        location: "Computer lab",
         courseId: courses[4]._id,
         userId: users[2]._id,
       },
