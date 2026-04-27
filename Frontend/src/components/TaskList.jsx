@@ -21,25 +21,29 @@ function TaskList({ refreshKey }) {
     return `${h}h ${m}m`;
   };
 
-  const fetchTasks = async () => {
-    try {
+  const fetchTasks = async (showLoading = false) => {
+  try {
+    if (showLoading) {
       setLoading(true);
+    }
 
-      const response = await fetch("http://localhost:5000/api/tasks");
+    const response = await fetch("http://localhost:5000/api/tasks");
 
-      if (!response.ok) {
-        throw new Error("Failed to fetch tasks");
-      }
+    if (!response.ok) {
+      throw new Error("Failed to fetch tasks");
+    }
 
-      const data = await response.json();
-      setTasks(data);
-      setError("");
-    } catch (err) {
-      setError(err.message);
-    } finally {
+    const data = await response.json();
+    setTasks(data);
+    setError("");
+  } catch (err) {
+    setError(err.message);
+  } finally {
+    if (showLoading) {
       setLoading(false);
     }
-  };
+  }
+ };
 
   const handleDelete = async (taskId) => {
     if (!window.confirm("Are you sure you want to delete this task?")) return;
@@ -56,7 +60,7 @@ function TaskList({ refreshKey }) {
         throw new Error(data.message || "Failed to delete task");
       }
 
-      fetchTasks();
+      fetchTasks(false);
     } catch (err) {
       setError(err.message);
     }
@@ -119,18 +123,20 @@ function TaskList({ refreshKey }) {
       }
 
       setEditingTaskId(null);
-      fetchTasks();
+      fetchTasks(false);
     } catch (err) {
       setError(err.message);
     }
   };
 
   useEffect(() => {
-    fetchTasks();
+  fetchTasks(true);
 
-    const intervalId = setInterval(fetchTasks, 10000);
+  const intervalId = setInterval(() => {
+    fetchTasks(false);
+  }, 10000);
 
-    return () => clearInterval(intervalId);
+  return () => clearInterval(intervalId);
   }, [refreshKey]);
 
   const filteredTasks = tasks.filter((task) =>
@@ -198,7 +204,7 @@ function TaskList({ refreshKey }) {
                     <option value="completed">Completed</option>
                   </select>
 
-                  {/* ✅ FIXED TIME INPUT */}
+                  {/* FIXED TIME INPUT */}
                   <div className="time-input">
                     <input
                       type="number"
@@ -224,6 +230,7 @@ function TaskList({ refreshKey }) {
                     >
                       <option value="">Minutes</option>
                       <option value="0">00 min</option>
+                      <option value="5">05 min</option>
                       <option value="10">10 min</option>
                       <option value="15">15 min</option>
                       <option value="20">20 min</option>
