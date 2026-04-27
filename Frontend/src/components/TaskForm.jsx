@@ -16,6 +16,7 @@ function TaskForm({ onTaskCreated }) {
   const [courses, setCourses] = useState([]);
   const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
+  const [success, setSuccess] = useState(""); 
 
   useEffect(() => {
     const fetchData = async () => {
@@ -41,6 +42,8 @@ function TaskForm({ onTaskCreated }) {
       ...formData,
       [e.target.name]: e.target.value,
     });
+
+    setSuccess(""); // Clear success when user types
   };
 
   const handleSubmit = async (e) => {
@@ -73,6 +76,7 @@ function TaskForm({ onTaskCreated }) {
         throw new Error(data.message || "Failed to create task");
       }
 
+      // Reset form
       setFormData({
         title: "",
         description: "",
@@ -86,9 +90,17 @@ function TaskForm({ onTaskCreated }) {
       });
 
       setError("");
+      setSuccess("Task created successfully!"); // SUCCESS MESSAGE
+
+      // Auto-hide after 3 seconds
+      setTimeout(() => {
+        setSuccess("");
+      }, 3000);
+
       onTaskCreated();
     } catch (err) {
       setError(err.message);
+      setSuccess("");
     }
   };
 
@@ -96,7 +108,8 @@ function TaskForm({ onTaskCreated }) {
     <section>
       <h2>Create New Task</h2>
 
-      {error && <p>{error}</p>}
+      {error && <p style={{ color: "red" }}>{error}</p>}
+      {success && <p style={{ color: "green" }}>{success}</p>}
 
       <form onSubmit={handleSubmit}>
         <input
@@ -151,6 +164,7 @@ function TaskForm({ onTaskCreated }) {
           <select name="minutes" value={formData.minutes} onChange={handleChange}>
             <option value="">Minutes</option>
             <option value="0">00 min</option>
+            <option value="5">05 min</option>
             <option value="10">10 min</option>
             <option value="15">15 min</option>
             <option value="20">20 min</option>
