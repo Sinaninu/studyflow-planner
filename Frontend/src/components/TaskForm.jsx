@@ -16,7 +16,7 @@ function TaskForm({ onTaskCreated }) {
   const [courses, setCourses] = useState([]);
   const [users, setUsers] = useState([]);
   const [error, setError] = useState("");
-  const [success, setSuccess] = useState(""); 
+  const [success, setSuccess] = useState("");
 
   useEffect(() => {
     const fetchData = async () => {
@@ -43,7 +43,7 @@ function TaskForm({ onTaskCreated }) {
       [e.target.name]: e.target.value,
     });
 
-    setSuccess(""); // Clear success when user types
+    setSuccess("");
   };
 
   const handleSubmit = async (e) => {
@@ -64,7 +64,7 @@ function TaskForm({ onTaskCreated }) {
           deadline: formData.deadline,
           priority: formData.priority,
           status: formData.status,
-          estimatedHours: estimatedHours,
+          estimatedHours,
           courseId: formData.courseId,
           userId: formData.userId,
         }),
@@ -76,7 +76,6 @@ function TaskForm({ onTaskCreated }) {
         throw new Error(data.message || "Failed to create task");
       }
 
-      // Reset form
       setFormData({
         title: "",
         description: "",
@@ -90,9 +89,8 @@ function TaskForm({ onTaskCreated }) {
       });
 
       setError("");
-      setSuccess("Task created successfully!"); // SUCCESS MESSAGE
+      setSuccess("Task created successfully!");
 
-      // Auto-hide after 3 seconds
       setTimeout(() => {
         setSuccess("");
       }, 3000);
@@ -105,13 +103,13 @@ function TaskForm({ onTaskCreated }) {
   };
 
   return (
-    <section>
+    <section className="card">
       <h2>Create New Task</h2>
 
-      {error && <p style={{ color: "red" }}>{error}</p>}
-      {success && <p style={{ color: "green" }}>{success}</p>}
+      {error && <p className="message error-message">{error}</p>}
+      {success && <p className="message success-message">{success}</p>}
 
-      <form onSubmit={handleSubmit}>
+      <form className="task-form" onSubmit={handleSubmit}>
         <input
           name="title"
           placeholder="Task title"
@@ -151,7 +149,7 @@ function TaskForm({ onTaskCreated }) {
           <option value="completed">Completed</option>
         </select>
 
-        <div style={{ display: "flex", gap: "10px" }}>
+        <div className="time-input">
           <input
             name="hours"
             type="number"
@@ -200,7 +198,9 @@ function TaskForm({ onTaskCreated }) {
           ))}
         </select>
 
-        <button type="submit">Add Task</button>
+        <button className="btn btn-success form-submit" type="submit">
+          Add Task
+        </button>
       </form>
     </section>
   );
