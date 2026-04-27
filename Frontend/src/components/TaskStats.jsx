@@ -2,8 +2,9 @@ import { useEffect, useState } from "react";
 
 function TaskStats({ refreshKey }) {
   const [stats, setStats] = useState(null);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState("");
 
-  // Format hours into "Xh Ym"
   const formatHours = (hours) => {
     if (!hours) return "0h";
 
@@ -19,20 +20,30 @@ function TaskStats({ refreshKey }) {
   useEffect(() => {
     const fetchStats = async () => {
       try {
-        const res = await fetch(
-          "http://localhost:5000/api/tasks/stats/summary"
-        );
+        setLoading(true);
+
+        const res = await fetch("http://localhost:5000/api/tasks/stats/summary");
+
+        if (!res.ok) {
+          throw new Error("Failed to fetch task statistics");
+        }
+
         const data = await res.json();
         setStats(data);
+        setError("");
       } catch (err) {
-        console.error("Failed to fetch stats");
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     };
 
     fetchStats();
   }, [refreshKey]);
 
-  if (!stats) return <p>Loading stats...</p>;
+  if (loading) return <p>Loading stats...</p>;
+  if (error) return <p className="message error-message">{error}</p>;
+  if (!stats) return <p>No statistics available.</p>;
 
   return (
     <section>
@@ -41,8 +52,6 @@ function TaskStats({ refreshKey }) {
       <p>Completed: {stats.completedTasks}</p>
       <p>Pending: {stats.pendingTasks}</p>
       <p>In Progress: {stats.inProgressTasks}</p>
-
-      {/*FIXED DISPLAY */}
       <p>
         Total Estimated Time:{" "}
         <strong>{formatHours(stats.totalEstimatedHours)}</strong>
